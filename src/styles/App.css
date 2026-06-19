@@ -1,0 +1,583 @@
+/* ============================================
+   앱 메인 컨테이너
+   ============================================ */
+.app {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background 1s ease, color 0.5s ease;
+  overflow: hidden;
+  background-attachment: fixed;
+  position: relative;
+}
+
+/* 산 카페 테마 - 천장 조명 아래 */
+.app.theme-mountain {
+  background: 
+    radial-gradient(ellipse at 50% -20%, rgba(255, 200, 150, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 30%, rgba(200, 150, 100, 0.2) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 40%, rgba(220, 180, 120, 0.2) 0%, transparent 45%),
+    linear-gradient(180deg, #f5e6d3 0%, #e8d5c4 30%, #dcc4b5 60%, #d0b3a6 100%);
+  color: #5a4a3a;
+}
+
+/* 폭포 테마 - 물이 떨어지는 아래 */
+.app.theme-waterfall {
+  background:
+    radial-gradient(ellipse at 50% -30%, rgba(100, 200, 255, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(150, 220, 255, 0.2) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 25%, rgba(100, 180, 220, 0.2) 0%, transparent 45%),
+    linear-gradient(180deg, #d4e8f0 0%, #c0dae6 30%, #acd2e1 60%, #98cadc 100%);
+  color: #2a4a5a;
+}
+
+/* 산 카페 - 진행도별 변화 (천장 조명이 변함) */
+.app.theme-mountain.progress-3 {
+  background: 
+    radial-gradient(ellipse at 50% -20%, rgba(255, 190, 130, 0.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 30%, rgba(190, 140, 90, 0.25) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 40%, rgba(210, 170, 110, 0.25) 0%, transparent 45%),
+    linear-gradient(180deg, #f0e0cc 0%, #e3cfba 30%, #d7bfab 60%, #cb9f9c 100%);
+}
+
+.app.theme-mountain.progress-5 {
+  background: 
+    radial-gradient(ellipse at 50% -20%, rgba(255, 180, 110, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 30%, rgba(180, 130, 80, 0.3) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 40%, rgba(200, 160, 100, 0.3) 0%, transparent 45%),
+    linear-gradient(180deg, #ebd9c4 0%, #ddc9b0 30%, #cf9f9d 60%, #c28f8d 100%);
+}
+
+.app.theme-mountain.progress-7 {
+  background: 
+    radial-gradient(ellipse at 50% -20%, rgba(255, 170, 90, 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 30%, rgba(170, 120, 70, 0.35) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 40%, rgba(190, 150, 90, 0.35) 0%, transparent 45%),
+    linear-gradient(180deg, #e0cbb8 0%, #d1b9a2 30%, #c7888e 60%, #ba7880 100%);
+}
+
+.app.theme-mountain.progress-10 {
+  background: 
+    radial-gradient(ellipse at 50% -20%, rgba(255, 160, 70, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 30%, rgba(160, 110, 60, 0.4) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 40%, rgba(180, 140, 80, 0.4) 0%, transparent 45%),
+    linear-gradient(180deg, #d4bdac 0%, #c5ada8 30%, #ba8080 60%, #ad7872 100%);
+}
+
+/* 폭포 - 진행도별 변화 (위에서 물이 더 떨어지는 느낌) */
+.app.theme-waterfall.progress-3 {
+  background:
+    radial-gradient(ellipse at 50% -30%, rgba(100, 200, 255, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(140, 210, 255, 0.25) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 25%, rgba(90, 170, 210, 0.25) 0%, transparent 45%),
+    linear-gradient(180deg, #c8e4ed 0%, #b2d5e0 30%, #9cc9d8 60%, #86bdd0 100%);
+}
+
+.app.theme-waterfall.progress-5 {
+  background:
+    radial-gradient(ellipse at 50% -30%, rgba(80, 190, 255, 0.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(120, 200, 255, 0.3) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 25%, rgba(70, 160, 200, 0.3) 0%, transparent 45%),
+    linear-gradient(180deg, #bce0ea 0%, #a4cedb 30%, #8cc2d3 60%, #74b0cb 100%);
+}
+
+.app.theme-waterfall.progress-7 {
+  background:
+    radial-gradient(ellipse at 50% -30%, rgba(60, 180, 255, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(100, 190, 255, 0.35) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 25%, rgba(50, 150, 190, 0.35) 0%, transparent 45%),
+    linear-gradient(180deg, #b0dce7 0%, #96c8d8 30%, #7eb8d2 60%, #629ec8 100%);
+}
+
+.app.theme-waterfall.progress-10 {
+  background:
+    radial-gradient(ellipse at 50% -30%, rgba(40, 170, 255, 0.45) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 20%, rgba(80, 180, 255, 0.4) 0%, transparent 40%),
+    radial-gradient(ellipse at 70% 25%, rgba(30, 140, 180, 0.4) 0%, transparent 45%),
+    linear-gradient(180deg, #a4d8e4 0%, #88c2d5 30%, #70aecf 60%, #528cc5 100%);
+}
+
+/* ============================================
+   헤더
+   ============================================ */
+.app-header {
+  padding: 20px 30px;
+  text-align: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.app-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.header-info {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.rest-count {
+  display: inline-block;
+  padding: 6px 14px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(5px);
+}
+
+/* ============================================
+   메인 컨테이너 - 중앙 중심 레이아웃
+   ============================================ */
+.main-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding: 40px;
+  overflow-y: auto;
+  align-items: center;
+  justify-items: center;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  align-items: center;
+  justify-items: center;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: 600px;
+}
+
+/* ============================================
+   테마 선택 섹션
+   ============================================ */
+.theme-selector {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.theme-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  opacity: 0.9;
+  text-align: center;
+}
+
+.theme-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
+  color: inherit;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.theme-btn:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.theme-btn.active {
+  background-color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================
+   아이스크림 섹션 - 중앙 핵심
+   ============================================ */
+.icecream-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+  flex: 1;
+  justify-content: center;
+}
+
+.icecream-container {
+  position: relative;
+  width: 120px;
+  height: 320px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 60px 60px 25px 25px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column-reverse;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(5px);
+}
+
+.icecream-container:hover {
+  transform: scale(1.08);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.icecream-container.pressed {
+  transform: scale(0.95);
+  box-shadow: inset 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.icecream {
+  width: 100%;
+  background: linear-gradient(180deg, #ffb6d9 0%, #ff8aa1 100%);
+  border-radius: 60px 60px 0 0;
+  transition: height 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 70px;
+}
+
+.icecream-text {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0.9;
+  margin-top: 15px;
+}
+
+/* ============================================
+   타이머 섹션
+   ============================================ */
+.timer-section {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 25px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  min-width: 280px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 14px;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff8aa1 0%, #ffc1cc 100%);
+  transition: width 0.3s ease;
+  border-radius: 7px;
+}
+
+.timer-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.time {
+  font-size: 48px;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+.percentage {
+  font-size: 36px;
+  font-weight: 700;
+  opacity: 0.8;
+}
+
+/* ============================================
+   사운드 섹션
+   ============================================ */
+.sound-section {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  text-align: center;
+}
+
+.sound-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
+  color: inherit;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-bottom: 12px;
+  backdrop-filter: blur(5px);
+}
+
+.sound-btn:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.sound-btn.disabled {
+  opacity: 0.6;
+}
+
+.sound-description {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* ============================================
+   채팅 패널
+   ============================================ */
+.chat-panel {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-radius: 15px;
+  padding: 20px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.chat-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 8px;
+}
+
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.chat-message {
+  background-color: rgba(255, 255, 255, 0.4);
+  padding: 12px 14px;
+  border-radius: 8px;
+  border-left: 3px solid rgba(255, 172, 193, 0.7);
+}
+
+.message-user {
+  font-weight: 700;
+  font-size: 12px;
+  opacity: 0.8;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.message-time {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-left: 8px;
+}
+
+.message-text {
+  font-size: 14px;
+  line-height: 1.4;
+  margin: 4px 0 0 0;
+}
+
+.chat-form {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: inherit;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: rgba(255, 172, 193, 0.8);
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.chat-input::placeholder {
+  opacity: 0.6;
+}
+
+.chat-submit {
+  padding: 10px 16px;
+  background-color: rgba(255, 172, 193, 0.6);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.chat-submit:hover {
+  background-color: rgba(255, 172, 193, 0.8);
+  transform: translateY(-2px);
+}
+
+.chat-submit:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   반응형 디자인
+   ============================================ */
+@media (max-width: 1200px) {
+  .main-container {
+    gap: 30px;
+    padding: 30px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .right-section {
+    max-height: 400px;
+  }
+
+  .left-section {
+    justify-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 15px;
+  }
+
+  .app-title {
+    font-size: 24px;
+  }
+
+  .main-container {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .icecream-container {
+    width: 100px;
+    height: 250px;
+  }
+
+  .icecream {
+    font-size: 50px;
+  }
+
+  .time {
+    font-size: 36px;
+  }
+
+  .percentage {
+    font-size: 28px;
+  }
+
+  .chat-panel {
+    max-height: 350px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 12px;
+  }
+
+  .app-title {
+    font-size: 20px;
+  }
+
+  .main-container {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .icecream-container {
+    width: 80px;
+    height: 200px;
+  }
+
+  .icecream {
+    font-size: 40px;
+  }
+
+  .time {
+    font-size: 28px;
+  }
+
+  .percentage {
+    font-size: 22px;
+  }
+
+  .theme-btn {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .timer-section {
+    min-width: auto;
+    padding: 15px;
+  }
+}
