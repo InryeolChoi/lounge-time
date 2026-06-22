@@ -1,134 +1,148 @@
 # Lounge Time 🛋️
 
-직장인을 위한 3분 휴식 웹 애플리케이션
+직장인을 위한 **3분 휴식** 웹 애플리케이션
 
-## 프로젝트 소개
+화면 중앙의 아이스크림을 누르고 있는 동안 휴식 시간이 실시간으로 흐릅니다.
+진행도에 따라 카페/폭포 테마의 배경이 부드럽게 바뀌고, Web Audio 앰비언스와
+익명 라운지 채팅이 "온라인 라운지에 들어온 느낌"을 만들어 줍니다.
 
-**Lounge Time**은 바쁜 직장인들이 업무 중에 짧은 휴식을 즐길 수 있도록 설계된 웹 앱입니다.
-아이스크림을 먹는 인터랙션을 통해 3분간의 휴식 시간을 시각화하고, 카페 분위기의 테마와 사운드를 통해 온라인 라운지에 입장한 듯한 경험을 제공합니다.
+---
 
-## 주요 기능
+## ✨ 주요 기능
 
-### 🍦 아이스크림 인터랙션
-- 화면 중앙에 큰 아이스크림 막대 표시
-- 마우스/터치로 누르고 있으면 점진적으로 아이스크림이 줄어듦
-- 진행율이 시각화됨
+- 🍦 **아이스크림 인터랙션** — 누르고 있는 동안에만 휴식이 진행(실시간). 떼면 일시정지. 마우스·터치·키보드(Space/Enter) 지원
+- 🎨 **동적 테마** — 산 카페 / 폭포 테마, 진행도에 따라 그라데이션 변화
+- 🎵 **앰비언스 사운드** — 오디오 파일 없이 Web Audio API 로 테마별 사운드 생성
+- 💬 **익명 라운지 채팅** — Spring Boot 백엔드와 연동, 백엔드가 없으면 localStorage 로 자동 폴백
+- 📊 **휴식 추적** — 휴식 완료 시 누적 카운트 증가(중복 증가 없음)
 
-### 🎨 동적 테마 시스템
-- **산 카페 테마**: 산장의 따뜻한 분위기
-- **폭포 테마**: 폭포 주변의 시원한 분위기
-- 진행율에 따라 배경색이 부드럽게 변화
+---
 
-### 🎵 오디오 시스템
-- 산 카페: 에어컨 소리 + 사람들 대화
-- 폭포: 폭포 소리 + 자연음
-- 음소거 기능 제공
+## 🧱 기술 스택
 
-### 💬 익명 채팅
-- 샘플 메시지로 라운지 분위기 연출
-- 사용자 입력 기능 (로컬 저장)
-- 온라인 카페의 따뜻한 분위기 제공
+| 구분 | 스택 |
+|------|------|
+| Frontend | React 18 · TypeScript · Vite · 순수 CSS |
+| Backend | **Java 22** · Spring Boot 3.3 · Gradle |
+| 저장 | 백엔드 in-memory + 브라우저 localStorage 폴백 |
+| 배포 | 프론트엔드: Azure Static Web Apps · 백엔드: 임의의 JVM 호스트 |
 
-### 📊 휴식 추적
-- 아이스크림을 끝까지 먹으면 휴식 완료 카운트 증가
-- 브라우저 로컬스토리지에 자동 저장
-- 누적 휴식 횟수 표시
+---
 
-## 기술 스택
-
-- **프론트엔드**: React 18 + TypeScript
-- **스타일링**: Pure CSS (외부 라이브러리 미사용)
-- **상태 관리**: React Hooks (useState, useEffect)
-- **저장소**: Browser LocalStorage
-- **배포**: Microsoft Azure
-
-## 설치 및 실행
-
-### 1. 프로젝트 설정
-```bash
-npm install
-```
-
-### 2. 개발 서버 실행
-```bash
-npm start
-```
-
-브라우저에서 `http://localhost:3000`으로 접속하면 앱을 확인할 수 있습니다.
-
-### 3. 프로덕션 빌드
-```bash
-npm run build
-```
-
-## 폴더 구조
+## 📁 프로젝트 구조
 
 ```
 .
-├── .github/              # GitHub 설정
-│   └── workflows/        # GitHub Actions 워크플로우
-├── public/               # 정적 파일
-│   └── index.html
-├── src/
-│   ├── components/       # React 컴포넌트
-│   ├── styles/          # CSS 스타일
-│   │   ├── index.css
-│   │   └── App.css
-│   ├── assets/          # 이미지, 오디오
-│   ├── types/           # TypeScript 타입
-│   ├── App.tsx          # 메인 앱 컴포넌트
-│   └── index.tsx        # 진입점
-├── .instructions.md     # 프로젝트 지침
+├── CLAUDE.md                # AI/기여자용 아키텍처·컨벤션 가이드
+├── index.html               # Vite 진입 HTML
 ├── package.json
-├── tsconfig.json
-└── tsconfig.node.json
+├── vite.config.ts           # /api → :8080 dev 프록시
+├── public/                  # favicon 등 정적 자산
+├── src/
+│   ├── App.tsx              # 화면 조립
+│   ├── components/          # Header, IceCream, ChatPanel ...
+│   ├── hooks/               # useRestTimer, useAmbientSound
+│   ├── services/            # chatApi (백엔드 통신 + 폴백)
+│   ├── types/               # 공용 타입
+│   └── styles/              # CSS
+└── backend/                 # Spring Boot (Java 22, Gradle)
+    ├── build.gradle
+    └── src/main/java/com/loungetime/
+        ├── controller/      # ChatController, StatsController
+        ├── service/         # ChatService, StatsService
+        ├── model/           # Message (record)
+        └── config/          # CORS
 ```
 
-## 컨셉 및 설계 철학
+---
 
-### 깔끔하고 심플한 디자인
-- 불필요한 요소 최소화
-- 직관적인 UI/UX
-- 접근성 고려
+## 🚀 실행 방법
 
-### 성능 최적화
-- 불필요한 리렌더링 방지
-- CSS 트랜지션을 활용한 부드러운 애니메이션
-- 로컬 스토리지 활용으로 서버 의존성 제거
+### 사전 요구사항
+- Node.js 18+ / npm
+- JDK 22 (백엔드 실행 시. Gradle 은 wrapper 포함이라 별도 설치 불필요)
 
-### 사용자 경험
-- 명확한 시각적 피드백
-- 반응형 디자인 (모바일 친화적)
-- 따뜻한 라운지 분위기
-
-## 향후 개선 사항
-
-- [ ] 실제 오디오 파일 추가 및 최적화
-- [ ] 추가 테마 (바다, 도서관 등)
-- [ ] 통계 대시보드
-- [ ] 사용자 설정 저장
-- [ ] PWA 기능 추가
-- [ ] 다중 언어 지원
-
-## 배포
-
-Azure에 배포하려면:
+### 1) 프론트엔드
 
 ```bash
-# Azure CLI 설치 필수
-npm run build
-az webapp up --name <app-name>
+npm install
+npm run dev        # http://localhost:3000
 ```
+
+### 2) 백엔드 (선택 — 없어도 프론트는 단독 동작)
+
+```bash
+cd backend
+./gradlew bootRun  # http://localhost:8080
+```
+
+dev 모드에서는 Vite 가 `/api` 요청을 `http://localhost:8080` 으로 프록시합니다.
+
+### 3) 프로덕션 빌드
+
+```bash
+npm run build              # 타입검사 + dist/ 생성
+cd backend && ./gradlew build   # jar + 테스트
+```
+
+---
+
+## 🔌 API
+
+기본 경로 `/api` (dev 에서는 Vite 프록시).
+
+| Method | Path               | 설명                              | 본문 |
+|--------|--------------------|-----------------------------------|------|
+| GET    | `/api/messages`    | 채팅 메시지 목록                  | —    |
+| POST   | `/api/messages`    | 메시지 추가 (201)                 | `{ "user": "You_1", "text": "..." }` |
+| GET    | `/api/stats`       | 누적 휴식 완료 수                 | —    |
+| POST   | `/api/stats/rest`  | 휴식 완료 1회 기록                | —    |
+
+예시:
+
+```bash
+curl http://localhost:8080/api/messages
+curl -X POST http://localhost:8080/api/messages \
+  -H 'Content-Type: application/json' \
+  -d '{"user":"You_42","text":"안녕하세요"}'
+```
+
+> `text` 는 필수이며 최대 100자입니다. 비어 있으면 `400` 을 반환합니다.
+
+---
+
+## 🧪 검증
+
+```bash
+npm run typecheck                 # 프론트엔드 타입 검사
+npm run build                     # 프론트엔드 빌드
+cd backend && ./gradlew build     # 백엔드 컴파일 + 테스트
+```
+
+---
+
+## 🧭 설계 메모
+
+- 핵심 메커니즘은 "누르고 있는 동안 실시간으로 흐르는" 3분 휴식입니다.
+- 백엔드가 없어도 프론트엔드가 단독으로 동작하도록 모든 통신에 localStorage 폴백을 둡니다.
+- 자세한 아키텍처·컨벤션·개선 이력은 [`CLAUDE.md`](./CLAUDE.md) 를 참고하세요.
+
+---
+
+## 📈 향후 개선 아이디어
+
+- [ ] 메시지 영속화(DB) 및 다중 인스턴스 지원
+- [ ] 추가 테마(바다, 도서관 등)
+- [ ] 통계 대시보드 / 사용자 설정 저장
+- [ ] PWA · 다국어 지원
+- [ ] 백엔드 컨테이너화 및 배포 파이프라인
+
+---
 
 ## 라이선스
 
 MIT
 
-## 문의
-
-프로젝트에 대한 질문이나 제안이 있으시면 이슈를 등록해주세요.
-
 ---
 
-**Lounge Time** - 당신의 휴식 시간을 더 특별하게 만드는 앱 🛋️☕
-# lounge-time
+**Lounge Time** — 당신의 휴식 시간을 더 특별하게 🛋️☕
