@@ -3,18 +3,21 @@
 직장인을 위한 **3분 휴식** 웹 애플리케이션
 
 화면 중앙의 아이스크림을 누르고 있는 동안 휴식 시간이 실시간으로 흐릅니다.
-진행도에 따라 카페/폭포 테마의 배경이 부드럽게 바뀌고, Web Audio 앰비언스와
+화면 전체는 "카페에 앉아 창밖을 바라보거나, 실내 폭포 조경을 마주한" 1인칭 몰입 씬으로
+구성되며, 진행도에 따라 카페/폭포 테마의 배경이 부드럽게 바뀌고, Web Audio 앰비언스와
 익명 라운지 채팅이 "온라인 라운지에 들어온 느낌"을 만들어 줍니다.
 
 ---
 
 ## ✨ 주요 기능
 
-- 🍦 **아이스크림 인터랙션** — 누르고 있는 동안에만 휴식이 진행(실시간). 떼면 일시정지. 마우스·터치·키보드(Space/Enter) 지원
-- 🎨 **동적 테마** — 산 카페 / 폭포 테마, 진행도에 따라 그라데이션 변화
-- 🎵 **앰비언스 사운드** — 오디오 파일 없이 Web Audio API 로 테마별 사운드 생성
-- 💬 **익명 라운지 채팅** — Spring Boot 백엔드와 연동, 백엔드가 없으면 localStorage 로 자동 폴백
+- 🍦 **아이스크림 인터랙션** — 클릭·탭·키보드(Space/Enter)로 휴식을 시작·일시정지(토글). 진행에 따라 실시간으로 녹아 줄어들고, 남은 시간을 카운트다운으로 표시
+- 🪟 **1인칭 몰입 씬** — 앉아서 카페 창밖(산 풍경·펜던트 조명·원목 테이블) 또는 실내 폭포 조경(흐르는 물줄기·수반 물결)을 바라보는 시점. 순수 CSS 레이어로 깊이감을 만들고, 전경의 아이스크림을 살짝 내려다보는 원근으로 표현
+- 🎨 **동적 테마** — 산 카페 / 폭포 테마, 진행도에 따라 그라데이션 변화 (설정 저장)
+- 🎵 **앰비언스 사운드** — 오디오 파일 없이 Web Audio API 로 테마별 사운드 생성 (설정 저장)
+- 💬 **익명 라운지 채팅** — Spring Boot 백엔드와 연동, 백엔드가 없으면 localStorage 로 자동 폴백. 내 메시지 강조·빈 상태 안내
 - 📊 **휴식 추적** — 휴식 완료 시 누적 카운트 증가(중복 증가 없음)
+- ♿ **접근성** — 키보드 토글, `:focus-visible` 포커스 표시, `prefers-reduced-motion` 대응
 
 ---
 
@@ -22,7 +25,7 @@
 
 | 구분 | 스택 |
 |------|------|
-| Frontend | React 18 · TypeScript · Vite · 순수 CSS |
+| Frontend | React 18 · TypeScript · Vite · 순수 CSS · Vitest |
 | Backend | **Java 22** · Spring Boot 3.3 · Gradle |
 | 저장 | 백엔드 in-memory + 브라우저 localStorage 폴백 |
 | 배포 | 프론트엔드: Azure Static Web Apps · 백엔드: 임의의 JVM 호스트 |
@@ -40,11 +43,12 @@
 ├── public/                  # favicon 등 정적 자산
 ├── src/
 │   ├── App.tsx              # 화면 조립
-│   ├── components/          # Header, IceCream, ChatPanel ...
-│   ├── hooks/               # useRestTimer, useAmbientSound
+│   ├── components/          # Header, Scene(몰입 씬), IceCream, ChatPanel ...
+│   ├── hooks/               # useRestTimer, useAmbientSound, usePersistentState
 │   ├── services/            # chatApi (백엔드 통신 + 폴백)
 │   ├── types/               # 공용 타입
-│   └── styles/              # CSS
+│   ├── utils/               # time 등 순수 로직(+ Vitest 테스트)
+│   └── styles/              # App.css, Scene.css
 └── backend/                 # Spring Boot (Java 22, Gradle)
     ├── build.gradle
     └── src/main/java/com/loungetime/
@@ -115,6 +119,7 @@ curl -X POST http://localhost:8080/api/messages \
 
 ```bash
 npm run typecheck                 # 프론트엔드 타입 검사
+npm test                          # 프론트엔드 단위 테스트 (Vitest)
 npm run build                     # 프론트엔드 빌드
 cd backend && ./gradlew build     # 백엔드 컴파일 + 테스트
 ```
@@ -123,7 +128,7 @@ cd backend && ./gradlew build     # 백엔드 컴파일 + 테스트
 
 ## 🧭 설계 메모
 
-- 핵심 메커니즘은 "누르고 있는 동안 실시간으로 흐르는" 3분 휴식입니다.
+- 핵심 메커니즘은 클릭/탭/키보드로 시작·일시정지하는 3분 휴식입니다(타임스탬프 기반, 드리프트 없음).
 - 백엔드가 없어도 프론트엔드가 단독으로 동작하도록 모든 통신에 localStorage 폴백을 둡니다.
 - 자세한 아키텍처·컨벤션·개선 이력은 [`CLAUDE.md`](./CLAUDE.md) 를 참고하세요.
 

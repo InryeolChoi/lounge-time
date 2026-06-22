@@ -2,65 +2,53 @@ import React from 'react';
 
 interface IceCreamProps {
   progress: number;
-  isResting: boolean;
+  isRunning: boolean;
   isComplete: boolean;
-  onPressStart: () => void;
-  onPressEnd: () => void;
+  onToggle: () => void;
 }
 
 /**
- * 중앙 아이스크림. 누르고 있는 동안 휴식이 진행되며 점점 녹아 줄어든다.
- * 마우스/터치/키보드(Space·Enter) 입력을 모두 지원한다.
+ * 중앙 아이스크림 토글 버튼.
+ * 클릭/탭/키보드(Space·Enter)로 휴식을 시작·일시정지하며, 진행에 따라 녹아 줄어든다.
  */
 const IceCream: React.FC<IceCreamProps> = ({
   progress,
-  isResting,
+  isRunning,
   isComplete,
-  onPressStart,
-  onPressEnd,
+  onToggle,
 }) => {
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) {
-      e.preventDefault();
-      onPressStart();
-    }
-  };
-
-  const handleKeyUp = (e: React.KeyboardEvent) => {
-    if (e.key === ' ' || e.key === 'Enter') {
-      e.preventDefault();
-      onPressEnd();
-    }
-  };
+  const label = isComplete
+    ? '휴식 완료'
+    : isRunning
+      ? '휴식 일시정지'
+      : '휴식 시작';
 
   return (
     <div className="icecream-section">
-      <div
-        className={`icecream-container ${isResting ? 'pressed' : ''}`}
-        role="button"
-        tabIndex={0}
-        aria-label="아이스크림을 누르고 있으면 휴식이 진행됩니다"
-        aria-valuenow={progress}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        onMouseDown={onPressStart}
-        onMouseUp={onPressEnd}
-        onMouseLeave={onPressEnd}
-        onTouchStart={onPressStart}
-        onTouchEnd={onPressEnd}
-        onKeyDown={handleKeyDown}
-        onKeyUp={handleKeyUp}
-      >
-        <div className="icecream" style={{ height: `${100 - progress}%` }}>
-          🍦
-        </div>
+      <div className="icecream-stage">
+        <button
+          type="button"
+          className={`icecream-container ${isRunning ? 'running' : ''} ${
+            isComplete ? 'complete' : ''
+          }`}
+          onClick={onToggle}
+          aria-pressed={isRunning}
+          aria-label={`${label} (진행도 ${progress}%)`}
+          disabled={isComplete}
+        >
+          <div className="icecream" style={{ height: `${100 - progress}%` }}>
+            <span className="icecream-emoji" aria-hidden="true">
+              🍦
+            </span>
+          </div>
+        </button>
       </div>
-      <p className="icecream-text">
+      <p className="icecream-text" aria-live="polite">
         {isComplete
           ? '휴식 완료! 잠시 후 다시 시작돼요 ☕'
-          : isResting
-            ? '쉬는 중... 그대로 누르고 계세요'
-            : '아이스크림을 누르고 있으세요'}
+          : isRunning
+            ? '편하게 쉬는 중… 다시 누르면 일시정지'
+            : '아이스크림을 눌러 휴식을 시작하세요'}
       </p>
     </div>
   );

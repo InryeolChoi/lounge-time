@@ -9,21 +9,26 @@ import {
 } from './services/chatApi';
 import { useRestTimer } from './hooks/useRestTimer';
 import { useAmbientSound } from './hooks/useAmbientSound';
+import { usePersistentState } from './hooks/usePersistentState';
 import Header from './components/Header';
 import ThemeSelector from './components/ThemeSelector';
 import IceCream from './components/IceCream';
 import TimerDisplay from './components/TimerDisplay';
 import SoundControl from './components/SoundControl';
 import ChatPanel from './components/ChatPanel';
+import Scene from './components/Scene';
 
 /**
  * Lounge Time 메인 앱. 각 영역을 조립하고 상태/통신을 조율한다.
  */
 const App: React.FC = () => {
-  const [theme, setTheme] = useState<Theme>('mountain');
+  const [theme, setTheme] = usePersistentState<Theme>('loungeTimeTheme', 'mountain');
+  const [soundEnabled, setSoundEnabled] = usePersistentState<boolean>(
+    'loungeTimeSound',
+    false
+  );
   const [messages, setMessages] = useState<Message[]>([]);
   const [restCount, setRestCount] = useState(0);
-  const [soundEnabled, setSoundEnabled] = useState(false);
 
   // 초기 데이터 로드 (백엔드 우선, 실패 시 localStorage 폴백)
   useEffect(() => {
@@ -61,7 +66,9 @@ const App: React.FC = () => {
   const themeClass = `theme-${theme} progress-${Math.floor(timer.progress / 10)}`;
 
   return (
-    <div className={`app ${themeClass}`}>
+    <div className={`app ${themeClass} ${timer.isRunning ? 'running' : ''}`}>
+      <Scene />
+
       <Header restCount={restCount} />
 
       <div className="main-container">
@@ -70,13 +77,12 @@ const App: React.FC = () => {
 
           <IceCream
             progress={timer.progress}
-            isResting={timer.isResting}
+            isRunning={timer.isRunning}
             isComplete={timer.isComplete}
-            onPressStart={timer.start}
-            onPressEnd={timer.pause}
+            onToggle={timer.toggle}
           />
 
-          <TimerDisplay elapsed={timer.elapsed} progress={timer.progress} />
+          <TimerDisplay remaining={timer.remaining} progress={timer.progress} />
 
           <SoundControl
             enabled={soundEnabled}
